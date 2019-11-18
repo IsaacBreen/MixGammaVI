@@ -19,10 +19,10 @@ tensorflow_probability>=0.8
 I recommend installing using pip as it will also install the prerequisites. Run
 
 ```
-pip3 install mix_gamma_vi
+pip install mix_gamma_vi
 ```
 
-## Example
+### Example
 
 This is an example of posterior inference on a mixture of two gamma distributions under the shape-mean parameterisation. Suppose we have a 1-dimensional tensor `x` of data.
 
@@ -67,7 +67,7 @@ fit = mix_gamma_vi(x, K=tf.constant(2))
 
 ## Authors
 
-This work was submitted by **Isaac Breen** in partial fulfillment of the requirements for the Bachelor of Science degree with Honours at the University of Western Australia. Supervised by **John Lau** and **Edward Cripps**
+This work was submitted by Isaac Breen in partial fulfillment of the requirements for the Bachelor of Science degree with Honours at the University of Western Australia. Supervised by John Lau and Edward Cripps.
 
 ## License
 
