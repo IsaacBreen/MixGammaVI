@@ -19,7 +19,6 @@ npdtype = np.float64
 pi_numeric = tf.cast(np.pi, dtype)
 e_numeric = tf.cast(np.e, dtype)
 
-
 @tf.function
 def take_after(a, i, n):
     if i>a.shape[0] or i<0:
@@ -28,6 +27,7 @@ def take_after(a, i, n):
         return tf.concat([a[i:], a[:(n-(a.shape[0]-i))]], axis=0)
     else:
         return a[i:i+n]
+
     
 @tf.function
 def to_dtype(x):
@@ -47,6 +47,7 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
     N = x.shape[0]
     x,w0,wT,r,s,c,d,eps = [tf.cast(var, dtype) for var in [x,w0,wT,r,s,c,d,eps]]
     K_float = to_dtype(K)
+    x = tf.reshape(x, (-1,1))
 
     # Calculate the prior strength discount factor k
     w = w0
@@ -223,6 +224,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
     N = x.shape[0]
     x,w0,wT,r,s,xi,tau,eps = [tf.cast(var, dtype) for var in [x,w0,wT,r,s,xi,tau,eps]]
     K_float = to_dtype(K)
+    x = tf.reshape(x, (-1,1))
 
     # Calculate the prior strength discount factor k
     w = w0

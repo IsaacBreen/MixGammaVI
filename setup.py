@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="mix_gamma_vi", # Replace with your own username
-    version="1.0.10",
+    version="1.0.11",
     author="Isaac Breen",
     author_email="isaac.breen@icloud.com",
     description="A small example package",
