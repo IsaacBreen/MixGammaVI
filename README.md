@@ -1,6 +1,6 @@
 # Variational Inference for Mixtures of Gamma Distributions
 
-This package implements variational inference for mixtures of gamma distributions. For more information, see my thesis *Comparing Markov Chain Monte Carlo and Variational Methods for Bayesian Inference on Mixtures of Gamma Distributions*.
+This package implements variational inference for mixtures of gamma distributions. For more information, see *Comparing Markov Chain Monte Carlo and Variational Methods for Bayesian Inference on Mixtures of Gamma Distributions*.
 
 Two parameterisations of the gamma distribution are available: the shape-rate parameterisation and the shape-mean parameterisation. The shape-mean parameterisation is recommended since it generally produces superior posterior approximations and predictive distributions.
 
