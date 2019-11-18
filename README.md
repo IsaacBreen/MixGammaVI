@@ -59,7 +59,7 @@ fit = mix_gamma_vi(x, K=tf.constant(2))
 
 ## Authors
 
-This work was submitted by Isaac Breen in partial fulfillment of the requirements for the Bachelor of Science degree with Honours at the University of Western Australia. Supervised by John Lau and Edward Cripps.
+This work is submitted by Isaac Breen in partial fulfillment of the requirements for the Bachelor of Science degree with Honours at the University of Western Australia. Supervised by John Lau and Edward Cripps.
 
 ## License
 
