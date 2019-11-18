@@ -24,7 +24,7 @@ pip install mix_gamma_vi
 
 ### Example
 
-This is an example of posterior inference on a mixture of two gamma distributions under the shape-mean parameterisation. Suppose we have a 1-dimensional tensor `x` of data.
+This is an example of posterior inference on a mixture of two gamma distributions under the shape-mean parameterisation. Suppose we have a one-dimensional tensor `x` of data.
 
 ```python
 # import mix_gamma_vi function
