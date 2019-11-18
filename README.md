@@ -55,7 +55,7 @@ distribution.sample()
  'alpha': <tf.Tensor: id=4272, shape=(1, 2), dtype=float32, numpy=array([[20.11454, 87.04017]], dtype=float32)>}
 ```
 
-For a more in-depth example, see [`example.py`](https://github.com/IsaacBreen/MixGammaVI/blob/master/example.ipynb)
+For a more in-depth example, see [`example.py`](https://github.com/IsaacBreen/MixGammaVI/blob/master/example.ipynb).
 
 ## Performance Tip
 
