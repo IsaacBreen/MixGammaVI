@@ -399,9 +399,9 @@ parameter_names = ["zeta", "ahat", "sigma_sq", "gamma", "lambda_", "elbo"]
 
 class mix_gamma_vi:
 
-    def __init__(self, x, K=1, parameterisation=None, **kwargs):
+    def __init__(self, x, K=1, parameterisation="mean-shape", **kwargs):
         self.parameterisation = parameterisation
-        if parameterisation==None or parameterisation=="mean-shape":
+        if parameterisation=="mean-shape":
             self.parameters = _mix_gamma_vi_2(x, K=K, **kwargs)
         elif parameterisation=="shape-rate":
             self.parameters = _mix_gamma_vi_1(x, K=K, **kwargs)
@@ -417,7 +417,7 @@ class mix_gamma_vi:
             dist = tfd.JointDistributionNamed(dict(
                 pi    = tfd.Dirichlet(zeta),
                 alpha = tfd.Normal(ahat, sigma_sq**0.5),
-                mu  = tfd.InverseGamma(gamma, lambda_)))
+                mu    = tfd.InverseGamma(gamma, lambda_)))
         else:
             dist = tfd.JointDistributionNamed(dict(
                 pi    = tfd.Dirichlet(zeta),

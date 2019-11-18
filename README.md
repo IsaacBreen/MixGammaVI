@@ -45,15 +45,7 @@ distribution.mean()
  'alpha': <tf.Tensor: id=4212, shape=(1, 2), dtype=float32, numpy=array([[20.712543, 82.77388 ]], dtype=float32)>}
 ```
 
-```python
-# We can also sample from it
-distribution.sample()
-```
-```
-{'pi': <tf.Tensor: id=4232, shape=(1, 2), dtype=float32, numpy=array([[0.5217499, 0.4782501]], dtype=float32)>,
- 'beta': <tf.Tensor: id=4250, shape=(1, 2), dtype=float32, numpy=array([[0.9882057, 1.9811525]], dtype=float32)>,
- 'alpha': <tf.Tensor: id=4272, shape=(1, 2), dtype=float32, numpy=array([[20.11454, 87.04017]], dtype=float32)>}
-```
+We can sample from this distribution by calling `distribution.sample()`.
 
 For a more in-depth example, see [`example.py`](https://github.com/IsaacBreen/MixGammaVI/blob/master/example.ipynb).
 
