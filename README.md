@@ -16,7 +16,7 @@ tensorflow_probability>=0.8
 
 ### Installing
 
-I recommend installing using pip as it will also install the prerequisites. Run
+The recommended way to install is using pip. This will also install all prerequisites.
 
 ```
 pip install mix_gamma_vi
