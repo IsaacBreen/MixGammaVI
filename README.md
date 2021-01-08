@@ -51,7 +51,7 @@ For a more in-depth example, see [`example.py`](https://github.com/IsaacBreen/Mi
 
 ## Performance Tip
 
-To avoid retracing the tensor graph every time you change the parameters, pass them as TensorFlow constants. e.g. instead of the above, do
+To avoid retracing the tensor graph every time the parameters alter, pass parameters as TensorFlow constants. i.e. instead of the above, do
 
 ```python
 fit = mix_gamma_vi(x, K=tf.constant(2))
