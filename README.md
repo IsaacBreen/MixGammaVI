@@ -57,7 +57,7 @@ To avoid retracing the tensor graph every time `mix_gamma_vi` is called with a d
 fit = mix_gamma_vi(x, K=tf.constant(2))
 ```
 
-This is not necessesary if you only call mix_gamma_vi with a single set of keyword parameters throughout the program execution.
+This is not necessesary if you only call mix_gamma_vi with a single set of keyword parameters throughout the program lifetime.
 
 ## Authors
 
