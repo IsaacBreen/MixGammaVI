@@ -61,14 +61,14 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
 
     start_means = tf.reshape(tf.linspace(tf.maximum(-1.5*x_var**0.5 + x_mean, 1e-3), 1.5*x_var**0.5 + x_mean, K) , (1,K))
     start_vars = tf.fill((1,K), x_var/K_float**2)
-    
+
     zeta = tf.cast(tf.fill((1,K), N/K_float), dtype=dtype) + w
     gamma = start_means*10000
     lambda_ = start_vars*10000
-    
+
     ahat = start_means**2/start_vars
     sigma_sq = 1/(polygamma(to_dtype(1), ahat)*(s + N/K))
-    
+
     i = tf.constant(0, intdtype)
 
     # Setup data-structures to store values if RETURN_HISTORY is True
@@ -95,7 +95,7 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
     logx_shuffled = log(x_shuffled)
 
     j = tf.constant(0, intdtype)
-    
+
     # Some counters and a flag
     BREAK_COUNTER = tf.constant(0)
     ELBO_COUNTER = tf.constant(0)
@@ -115,15 +115,15 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
         xb = x_shuffled[j*BATCH_SIZE:(j+1)*BATCH_SIZE]
         logxb  = logx_shuffled[j*BATCH_SIZE:(j+1)*BATCH_SIZE]
         j += 1
-            
+
         # Compute q_{i,j}
         q = polygamma(to_dtype(0), zeta) - polygamma(to_dtype(0), K_float*w+N) + ahat*(polygamma(to_dtype(0), gamma) - log(lambda_)) \
             - lgamma(ahat) - 1/2*sigma_sq*polygamma(to_dtype(1), ahat) + (ahat-1)*logxb - gamma/lambda_*xb
         q = q - tf.reshape(tf.math.reduce_max(q, 1), (-1,1))
         q = tf.math.exp(q)
         q = q/tf.reshape(tf.reduce_sum(q, -1), (-1,1))
-                
-        
+
+
         # Calculate and store some often-used values
         batchsize_correction = tf.cast(N/BATCH_SIZE, dtype)
         q_summed_over_data = batchsize_correction*tf.reshape(tf.reduce_sum(q, 0), (1,-1))
@@ -146,8 +146,8 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
             ahat_nr = tf.clip_by_value(ahat_nr, clip_value_min=1e-30, clip_value_max=1e+30)
 
         ahat = (1-eps)*ahat + eps*ahat_nr
-    
-    
+
+
         # Store values
         if RETURN_HISTORY:
             zeta_history = tf.tensor_scatter_nd_update(zeta_history, [[i]], zeta)
@@ -156,7 +156,7 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
             gamma_history = tf.tensor_scatter_nd_update(gamma_history, [[i]], gamma)
             lambda_history = tf.tensor_scatter_nd_update(lambda_history, [[i]], lambda_)
 
-            
+
         # Calculate the ELBO every ELBO_TICK iterations
         if i%ELBO_TICK==0:
 
@@ -200,7 +200,7 @@ def _mix_gamma_vi_1(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, c=1e-10, d=1e-10
                     elif i>MIN_ITERATIONS:
                         # Done
                         break
-                        
+
             ELBO_COUNTER = ELBO_COUNTER + 1
             BREAK_COUNTER = BREAK_COUNTER + 1
 
@@ -245,7 +245,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
 
     ahat = start_means**2/start_vars
     sigma_sq = tf.cast(tf.fill((1,K), 1e-5), dtype)
-    
+
     i = tf.constant(0, intdtype)
 
     # Setup data-structures to store values if RETURN_HISTORY is True, otherwise set dummy values
@@ -266,18 +266,18 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
 
 
     running_elbo = tf.zeros(RUNNING_ELBO_SIZE*2)
-    
+
     x_shuffled = tf.random.shuffle(x)
     logx = log(x)
     logx_shuffled = log(x_shuffled)
-    
+
     j = tf.constant(0, intdtype)
 
     # Some counters and a flag
     BREAK_COUNTER = tf.constant(0)
     ELBO_COUNTER = tf.constant(0)
     CAVI_PHASE = False
-    
+
     # Begin variational inference
     for i in tf.range(start=0, limit=MAX_ITERATIONS-1):
 
@@ -306,7 +306,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
         q_summed_over_data = batchsize_correction*tf.reshape(tf.reduce_sum(q, 0), (1,-1))
         q_times_x_summed_over_data = batchsize_correction*tf.reshape(tf.reduce_sum(q*xb, 0), (1,-1))
         q_times_log_x_summed_over_data = batchsize_correction*tf.reshape(tf.reduce_sum(q*logxb, 0), (1,-1))
-                
+
         # Variational updates for zeta, gamma (here called gamma), lambda (here called lambda 2), and sigma_sq
         zeta = (1-eps)*zeta + eps*(w + q_summed_over_data)
         gamma = (1-eps)*gamma + eps*(xi + ahat*q_summed_over_data)
@@ -320,7 +320,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
             polygamma_1_ahat = polygamma(to_dtype(1), ahat_nr)
             polygamma_2_ahat = polygamma(to_dtype(2), ahat_nr)
             polygamma_3_ahat = polygamma(to_dtype(3), ahat_nr)
-            
+
             ahat_nr = ahat_nr - ( (polygamma(to_dtype(0), gamma) - log(lambda_))*q_summed_over_data \
                     + r + q_times_log_x_summed_over_data - q_times_x_summed_over_data*gamma/lambda_ \
                     + ( - sigma_sq/(2*ahat_nr**2) + 1 + log(ahat_nr) - polygamma_0_ahat \
@@ -331,7 +331,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
             ahat_nr = tf.abs(ahat_nr)
 
         ahat = (1-eps)*ahat + eps*ahat_nr
-        
+
         # Store values
         if RETURN_HISTORY:
             zeta_history = tf.tensor_scatter_nd_update(zeta_history, [[i]], zeta)
@@ -343,7 +343,7 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
 
         # Calculate the ELBO every ELBO_TICK iterations
         if i%ELBO_TICK==0:
-            
+
             elbo_constants = -tf.cast(K_float*lgamma(w) - lgamma(w*K_float), dtype=dtype) 
 
             E_joint_log_prob = elbo_constants + reduce_sum((w+q_summed_over_data-1)*(polygamma(to_dtype(0), zeta) \
@@ -356,13 +356,13 @@ def _mix_gamma_vi_2(x, K=1, w0=10000., wT=1., r=1e-10, s=1e-10, xi=1e-10, tau=1e
                 + 1/2*log(2*pi_numeric*e_numeric*sigma_sq) + lgamma(zeta) \
                 + zeta*polygamma(to_dtype(0), reduce_sum(zeta)) - (zeta-1)*polygamma(to_dtype(0), zeta)) \
                 - lgamma(reduce_sum(zeta)) - K_float*polygamma(to_dtype(0), reduce_sum(zeta))
-            
+
             elbo = E_joint_log_prob + entropy
 
             # Store ELBO
             if RETURN_HISTORY:
                 elbo_history = tf.tensor_scatter_nd_update(elbo_history, [[ELBO_COUNTER]], [elbo])
-                
+
             # Update an ELBO matrix to calculate a running mean of the ELBO
             running_elbo = tf.tensor_scatter_nd_update(running_elbo, [[ELBO_COUNTER%(RUNNING_ELBO_SIZE*2)]], [elbo])
 
@@ -413,17 +413,23 @@ class mix_gamma_vi:
 
     def distribution(self):
         zeta, ahat, sigma_sq, gamma, lambda_, elbo = self.parameters
-        if self.parameterisation=="mean-shape":
-            dist = tfd.JointDistributionNamed(dict(
-                pi    = tfd.Dirichlet(zeta),
-                alpha = tfd.Normal(ahat, sigma_sq**0.5),
-                mu    = tfd.InverseGamma(gamma, lambda_)))
-        else:
-            dist = tfd.JointDistributionNamed(dict(
-                pi    = tfd.Dirichlet(zeta),
-                alpha = tfd.Normal(ahat, sigma_sq**0.5),
-                beta  = tfd.InverseGamma(gamma, lambda_)))
-        return dist
+        return (
+            tfd.JointDistributionNamed(
+                dict(
+                    pi=tfd.Dirichlet(zeta),
+                    alpha=tfd.Normal(ahat, sigma_sq**0.5),
+                    mu=tfd.InverseGamma(gamma, lambda_),
+                )
+            )
+            if self.parameterisation == "mean-shape"
+            else tfd.JointDistributionNamed(
+                dict(
+                    pi=tfd.Dirichlet(zeta),
+                    alpha=tfd.Normal(ahat, sigma_sq**0.5),
+                    beta=tfd.InverseGamma(gamma, lambda_),
+                )
+            )
+        )
 
 
 
